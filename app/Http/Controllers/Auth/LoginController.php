@@ -36,4 +36,15 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+    /**
+     * Validate the user.
+     * @todo: enable username login
+     * @return username instead of email
+     */
+	public function username()
+	{
+		return 'username';
+	}
+
 }

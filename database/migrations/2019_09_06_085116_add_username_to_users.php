@@ -25,6 +25,9 @@ class AddUsernameToUsers extends Migration
         }
 
         Schema::table('users', function (Blueprint $table) {
+            // Change the field to not nullable
+            $table->string('username')->nullable(false)->change();
+
             // Create the user_name index
             $table->unique('username');
 

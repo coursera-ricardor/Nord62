@@ -16,6 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
+        'username', // @todo: enable the field to be updated
         'name', 'email', 'password',
     ];
 
