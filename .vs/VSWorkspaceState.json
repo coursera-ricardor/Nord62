@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\database",
+    "\\database\\migrations",
+    "\\database\\seeds",
+    "\\resources",
+    "\\resources\\js",
+    "\\resources\\views",
+    "\\resources\\views\\auth",
+    "\\resources\\views\\layouts"
+  ],
+  "PreviewInSolutionExplorer": false
+}
