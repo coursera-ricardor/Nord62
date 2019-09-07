@@ -11,3 +11,13 @@ The Auth model uses for default email as a login identifier. Most of the users h
 The hacker work is reduced by 50%, once (s)he has the first part of the access granted, "The email account". 
 Having multiple "Usernames" for different applications WAS SAFER, but were more work for the "Marketing" guys. (THANK YOU! )
 
+Access Control List
+
+This Laravel instance use "spatie/laravel-permission" implementation, permission and roles.
+https://github.com/spatie/laravel-permission
+
+The initial setup is based on the "installation isntructions" provided by the maintainer.
+
+Description field was added to the permissions and roles tables.
+
+The "CRUD" (Create-Read-Update-Delete) implementation is one of the training excercises.
