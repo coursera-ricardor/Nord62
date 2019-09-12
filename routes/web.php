@@ -18,3 +18,15 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+/*
+    Spatie Permissions and Roles
+    https://github.com/spatie/laravel-permission
+*/
+Route::resource('permissions','Access\permissionController');
+
+// Additional Test Methods
+Route::get('/roles/{role}/edit2','Access\roleController@edit2')->name('roles.edit2');
+Route::get('/roles/{role}/update2Permission','Access\roleController@update2Permission')->name('roles.update2Permission');
+// Standard Methods
+Route::resource('roles','Access\roleController');

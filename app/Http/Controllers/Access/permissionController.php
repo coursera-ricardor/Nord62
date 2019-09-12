@@ -5,8 +5,25 @@ namespace App\Http\Controllers\Access;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+// @todo: Add the Spatie Package
+use Spatie\Permission\Models\Permission;
+
+
 class permissionController extends Controller
 {
+
+    /**
+     * @todo: Add access restriction
+     *
+    */
+    /*
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    */
+
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +31,11 @@ class permissionController extends Controller
      */
     public function index()
     {
-        //
+        $master_model = 'permissions';
+
+        $permissions = Permission::orderby('id', 'desc')->get();
+        return view('access.permissions.index',compact('permissions','master_model'));
+
     }
 
     /**
@@ -24,7 +45,7 @@ class permissionController extends Controller
      */
     public function create()
     {
-        //
+        return view('access.permissions.create');
     }
 
     /**
@@ -35,7 +56,16 @@ class permissionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Fields Validation
+        $request->validate([
+            'name' => 'required|unique:permissions',
+            'guard_name' => 'required',
+            'description' => 'required',
+        ]);
+
+        Permission::create($request->all());
+
+        return redirect()->route('permissions.index')->with('success', __('Permission created successfully') );
     }
 
     /**
@@ -44,9 +74,20 @@ class permissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Permission $permission)
     {
-        //
+        return view('access.permissions.show', compact('permission'));
+    }
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show1($id)
+    {
+        $permission = Permission::FindorFail($id);  // Find the Permission
+        return view('access.permissions.show', compact('permission'));
     }
 
     /**
@@ -55,9 +96,10 @@ class permissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    // public function edit($id)
+    public function edit(Permission $permission)
     {
-        //
+        return view('access.permissions.edit',compact('permission'));
     }
 
     /**
@@ -67,9 +109,18 @@ class permissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    // public function update(Request $request, $id)
+    public function update(Request $request, Permission $permission)
     {
-        //
+        // Fields Validation
+        $request->validate([
+            'name' => 'required',
+            'guard_name' => 'required',
+            'description' => 'required',
+        ]);
+        $permission->update($request->all());
+
+        return redirect()->route('permissions.index')->with('success', __('Permission updated successfully') );
     }
 
     /**
