@@ -1,7 +1,6 @@
 @extends('access.roles.layout')
 
 @section('header_styles')
-
 @endsection
 
 

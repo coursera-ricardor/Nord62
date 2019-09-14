@@ -6,6 +6,13 @@
 
 require('./bootstrap');
 
+try {
+    require('datatables');
+    require('select2');
+    require('./libs/multiselect.js');
+} catch (e) { }
+
+
 window.Vue = require('vue');
 
 /**

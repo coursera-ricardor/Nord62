@@ -103,14 +103,19 @@ class roleController extends Controller
     // public function update(Request $request, $id)
     public function update(Request $request, Role $role)
     {
-        // dd($request->input());
         // Fields Validation
         $request->validate([
             'name' => 'required',
+            // 'guard' => 'required',
             'description' => 'required',
         ]);
+        // dd($request->input());
 
-        $role->update($request->all());
+        $role->update($request->except('permissionsAvailable','permissionsAssigned','qpermit'));
+        //
+        // Sync the Permissions
+        //
+        $this->syncRoles($role, $request->input('permissionsAssigned'));
 
         return redirect()->route('roles.index')->with('success', __('Role updated successfully') );
     }

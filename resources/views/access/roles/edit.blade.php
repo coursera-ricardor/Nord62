@@ -3,7 +3,6 @@
 @section('header_styles')
 
     <!-- Styles -->
-    <link href="{{ asset('css/multi-select.css') }}" rel="stylesheet">
 	
 @endsection
 
@@ -38,107 +37,65 @@
 					<label for="description">{{ __('Description') }}*</label>
 					<input type="text" class="form-control" id="description" name="description" value="{{ old('description') ? old('description') : $role->description }}" required>
 				</div>								
+
+                <!--
+                    Second Option
+                    Loading using Eloquent and multi-select (Not JQuery Version Candidate to be use in Vue or React)
+                -->
+                <div class="form-group row col-md-12">
+		            <div class="col-md-5">
+					    <label for="multiview" class="control-label">{{ __('Permissions Available') }}</label>
+			            <select name="permissionsAvailable[]" id="multiview" class="form-control" size="14" multiple="multiple">
+						    <!-- Search in the Collection -->
+						    @foreach ( $permissionsToSelect as $keyPermission => $permissionAvailable )
+                                @if( ! $role->permissions()->pluck('name','name')->has($permissionAvailable) )
+                                    <option value="{{ $keyPermission }}">{{ $permissionAvailable }}
+                                    </option>
+                                @endif
+
+						    @endforeach						
+			            </select>
+		            </div>
 				
-                <!-- MultiSelect -->
-				<div class="form-group col-xs-12">
-                    <div class="row">
-
-                        <!-- Permissions Available -->
-                        <div class="col-5">
-					        <label for="permission" class="control-label">{{ __('Permissions Available') }}</label>
-					        <select id="permissionindex" name="permissionsToSelect[]" class="form-control select2" multiple="multiple" size="10">
-						        <!-- Search in the Collection -->
-						        @foreach ( $permissionsToSelect as $keyPermission => $permissionAvailable )
-                                    @if( ! $role->permissions()->pluck('name','name')->has($permissionAvailable) )
-                                        <option value="{{ $keyPermission }}">{{ $permissionAvailable }}
-                                        </option>
-                                    @endif
-
-						        @endforeach						
-					        </select>
-                        </div>
-
-                        <div class="col-2">
-                	        <h4>@{{ title_actions }}</h4>
-                            <button class="btn btn-primary btn-block mb-2" v-on:click="allToRight">&raquo;</button>
-                            <button class="btn btn-primary btn-block mb-2" v-on:click="oneToRight">&gt;</button>
-                            <button class="btn btn-primary btn-block mb-2" v-on:click="allToLeft">&laquo;</button>
-                            <button class="btn btn-primary btn-block mb-2" v-on:click="oneToLeft">&lt;</button>
-                        </div>
-
-                        <!-- Permissions Assigned -->
-                        <div class="col-5">
-					        <label for="permissionsSelected" class="control-label">{{ __('Permissions Assigned') }}</label>
-					        <select id="permissionSelected" name="permissionsSelected[]" class="form-control select2" multiple="multiple" size="10">
-						        <!-- Search in the Collection -->
-						        @foreach ( $permissionsAssigned as $keyPermission => $permission )
-							        <option value="{{ old('permissions[]') ? old('permissions[]') : $keyPermission }}" >{{ $permission }}
-							        </option>
-						        @endforeach						
-					        </select>
-                        </div>
-				    </div>
-
-                    <div class="row">
-                        <button class="btn btn-primary btn-block mb-2" v-on:click="allToRight">Update Detail</button>
-				    </div>
-
-				</div>		
-                <!-- . MultiSelect -->
+		            <div class="col-md-2">
+                        <p>Actions</p>
+                        <br>
+			            <button type="button" id="multiview_undo" class="btn btn-danger btn-block">{{ __('undo') }}</button>
+			            <button type="button" id="multiview_rightAll" class="btn btn-default btn-block"><i class="fas fa-forward"></i></button>
+			            <button type="button" id="multiview_rightSelected" class="btn btn-default btn-block"><i class="fas fa-chevron-right"></i></button>
+			            <button type="button" id="multiview_leftSelected" class="btn btn-default btn-block"><i class="fas fa-chevron-left"></i></button>
+			            <button type="button" id="multiview_leftAll" class="btn btn-default btn-block"><i class="fas fa-backward"></i></button>
+			            <button type="button" id="multiview_redo" class="btn btn-warning btn-block">{{ __('redo') }}</button>
+		            </div>
 				
+		            <div class="col-md-5">
+					    <label for="multiview_to" class="control-label">{{ __('Permissions Assigned') }}</label>
+			            <select name="permissionsAssigned[]" id="multiview_to" class="form-control" size="14" multiple="multiple">
+						    <!-- Search in the Collection -->
+						    @foreach ( $permissionsAssigned as $keyPermission => $permission )
+							    <option value="{{ old('permissions[]') ? old('permissions[]') : $keyPermission }}" >{{ $permission }}
+							    </option>
+						    @endforeach
+                        </select>
+		            </div>
+
+	            </div>				
 			</div>
             <!-- .panel-body -->
 
             <!-- panel-footer -->
             <div class="panel-footer">
-		        <div class="form-group">
+		        <div class="form-group text-center">
 		
-			        <button type="submit" class="btn btn-primary">@lang('global.app_update')</button>
+			        <button type="submit" class="btn btn-primary">{{ __('Update') }}</button>
 			
-			        <a class="btn btn-danger pull-right" href="{{ route( $master_model . '.index' ) }}">@lang('global.app_cancel')</a>
+			        <a class="btn btn-danger pull-right" href="{{ route( $master_model . '.index' ) }}">{{ __('Cancel') }}</a>
 			
 		        </div>
 			</div>
             <!-- .panel-footer -->
 
 		</div>
-
-
-
-    <!-- Second Option -->
-    <div class="form-group row col-md-12">
-		<div class="col-md-5">
-			<select name="from[]" id="lstview" class="form-control" size="14" multiple="multiple">
-				<option value="HTML">HTML</option>
-				<option value="2CSS">CSS</option>
-				<option value="CSS">CSS3</option>
-				<option value="jQuery">jQuery</option>
-				<option value="JavaScript">JavaScript</option>
-				<option value="Bootstrap">Bootstrap</option>
-				<option value="MySQL">MySQL</option>
-				<option value="PHP">PHP</option>
-				<option value="JSP">JSP</option>
-				<option value="Rubi on Rails">Rubi on Rails</option>
-				<option value="SQL">SQL</option>
-                <option value="Java">Java</option>
-                <option value="Python">Python</option>
-			</select>
-		</div>
-				
-		<div class="col-md-2">
-			<button type="button" id="lstview_undo" class="btn btn-danger btn-block">undo</button>
-			<button type="button" id="lstview_rightAll" class="btn btn-default btn-block"><i class="fas fa-forward"></i></button>
-			<button type="button" id="lstview_rightSelected" class="btn btn-default btn-block"><i class="fas fa-chevron-right"></i></button>
-			<button type="button" id="lstview_leftSelected" class="btn btn-default btn-block"><i class="fas fa-chevron-left"></i></button>
-			<button type="button" id="lstview_leftAll" class="btn btn-default btn-block"><i class="fas fa-backward"></i></button>
-			<button type="button" id="lstview_redo" class="btn btn-warning btn-block">redo</button>
-		</div>
-				
-		<div class="col-md-5">
-			<select name="to[]" id="lstview_to" class="form-control" size="14" multiple="multiple"></select>
-		</div>
-
-	</div>
 
     </form>
 
@@ -149,38 +106,24 @@
 @endsection
 
 @section('javascripts')
-    <!-- JQuery multi-select Plugin -->
-    <script type="text/javascript" charset="utf8" src="{{ asset('js/jquery.multi-select.js') }}"></script>
-    <script type="text/javascript" charset="utf8" src="{{ asset('js/multiselect.js') }}"></script>
+    <!-- NON JQuery multi-select Plugin -->
 
 @endsection
 
 @section('javascriptscode')
 
     <script type="text/javascript">
-        // This is not the Official Jquery Plugin https://crlcu.github.io/multiselect/
-        $('#lstview').multiselect();
-	</script>
-
-    <script type="text/javascript">
-
-        // Select all the elements of the Select
-        var masterForm = document.getElementById("permissionindex").closest("form");
-        masterForm.addEventListener("submit", setAllTags);
-
-        function setAllTags () {
-            selectAllTags("permissionindex");
-            selectAllTags("permissionSelected");
-        }
-
-        function selectAllTags(element) {
-            var selectAll = document.getElementById(element);
-
-            for ( var i = 0; i < selectAll.length; ++i ) {
-                selectAll.options[i].selected = true;
+        // This is not the Official Jquery Plugin
+        //  This is the link to the multiselect code used https://crlcu.github.io/multiselect/
+        $('#multiview').multiselect({
+            search: {
+                left:  '<input type="text" name="qpermit" class="form-control" placeholder="{{ __('Search') }}..." />',
+                right: '<input type="text" name="qpermit" class="form-control" placeholder="{{ __('Search') }}..." />',
+            },
+            fireSearch: function(value) {
+                return value.length > 3;
             }
-
-        }
+        });
 	</script>
 
 
