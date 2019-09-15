@@ -73,8 +73,11 @@
 
                                 <!-- Actions -->
 					            <td>
-						
-						            <a href="#" class="btn btn-xs btn-info">{{ __('Show') }}</a>
+						            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rolesWithPermission"
+                                        data-permissionid="{{ $permission->name }}"
+                                        data-permissiondescription="{{ $permission->description }}"
+                                        data-roles="{{ $permission->roles()->get() }}"
+                                    >{{ __('Show') }}</button>
 					            </td>
 
 				            </tr>
@@ -82,6 +85,45 @@
 			
 		            </tbody>
 	            </table>
+
+                <!-- Modal to Display Roles with the Permission -->
+                <div class="modal " id="rolesWithPermission" tabindex="-1" role="dialog" aria-labelledby="rolesWithPermissionCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="rolesWithPermissionLongTitle">Modal title</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <table id="tablerolesindex" class="table table-bordered table-hover dataTable">
+			                        <thead>
+				                        <tr>
+					                        <th id="tbhname">{{ __('Name') }}</th>
+                                            <th>{{ __('Description') }}</th>
+				                        </tr>
+			                        </thead>
+			                        <tbody id="roledata">
+				                        <tr>
+						                    <td>
+							                    role name 
+						                    </td>
+						                    <td>role description</td>
+				                        </tr>
+			                        </tbody>
+		                        </table>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				<!-- .Modal -->
+
+
             </div>            
             @endunless()
 
@@ -105,9 +147,73 @@
 <!-- Specific Scripts to the page to be yielded -->
 
 @section('javascripts')
+@endsection
+
+@section('javascriptscode')
+     <script>
+        /*
+            Display the permissions assigned to the role
+        */
+        $('#tableindex').DataTable();
+    </script>
 
      <script>
-        $('#tableindex').DataTable();
+        /*
+            Display the roles associated to the Permission
+            This functionality allows to verify common actions between roles
+        */
+        var mytable = $('#tablerolesindex').DataTable({
+            columns: [
+                {data: 'name' },
+                {data: 'description' }
+            ]
+
+        })
+
+        $('#rolesWithPermission').on('shown.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var permissionId = button.data('permissionid')
+            var permissionDescription = button.data('permissiondescription')
+            var permissionRoles = button.data('roles')
+            var mymodal = $(this)
+
+            mymodal.find('.modal-title').text( "{{ __('Roles related to: ') }}" + permissionId)
+            mymodal.find('.modal-body #tbhname').text("{{ __('Name') }}")
+
+            /*
+                Clear the Table Body and the search
+            */
+            // console.log(mytable.row(':eq(0)').data() )
+            // console.log(permissionRoles )
+            mytable.clear()
+            mytable.search('')
+
+            // Example adding a row to the table
+            // mytable.row.add({'name' : 'nombre','description':'descripcion'})
+
+            /*
+                Add rows to the table
+            */
+            permissionRoles.forEach(function(item){
+                // console.log(item.id)
+                // console.log(item.name)
+                // console.log(item.description)
+                // mytable.row().add([item.name, item.description]).draw( false )
+                mytable.row.add(item)
+                /*
+                mymodal.find('.modal-body #roledata')
+                    .append('<tr>' +
+                        '<td>' + item.name + '</td>' +
+                        '<td>'+ item.description+ '</td>' +
+                        '</tr>')
+                */
+            })
+
+            // Re-Draw the table
+            mytable.draw()
+
+
+        })	
     </script>
 	
 @endsection
