@@ -9,8 +9,6 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-
-
 <!--
     Datatables required to display the list of records in the catalog
     - Require - JQuery

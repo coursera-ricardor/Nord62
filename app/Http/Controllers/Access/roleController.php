@@ -206,7 +206,7 @@ class roleController extends Controller
      * @param  Role  $role
      * @param  array  $permissionsToUpdate
      */
-    private function syncRoles(Role $roleToSync, array $permissionsToUpdate)
+    private function syncRoles(Role $roleToSync, array $permissionsToUpdate = null)
     {
         $roleToSync->permissions()->sync($permissionsToUpdate);
     }

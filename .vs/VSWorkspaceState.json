@@ -1,10 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\config",
-    "\\public",
+    "\\database",
+    "\\database\\migrations",
     "\\public\\css",
-    "\\resources",
     "\\resources\\js",
     "\\resources\\js\\libs",
     "\\resources\\sass",
@@ -12,6 +11,6 @@
     "\\resources\\views\\access",
     "\\resources\\views\\access\\permissions"
   ],
-  "SelectedNode": "\\resources\\js\\app.js",
+  "SelectedNode": "\\resources",
   "PreviewInSolutionExplorer": false
 }

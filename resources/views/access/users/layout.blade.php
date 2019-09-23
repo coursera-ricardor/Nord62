@@ -14,7 +14,11 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
 
     @yield('header_styles')
 
@@ -73,6 +77,22 @@
         </nav>
 
         <main class="py-4">
+
+            <!-- Messages from the session -->
+            @if (session()->has('success'))
+                <div class="alert alert-success">
+                    @if(is_array(session()->get('success')))
+                    <ul>
+                        @foreach (session()->get('success') as $message)
+                            <li>{{ $message }}</li>
+                        @endforeach
+                    </ul>
+                    @else
+                        {{ session()->get('success') }}
+                    @endif
+                </div>
+            @endif
+
             @yield('content')
         </main>
     </div>
@@ -80,6 +100,8 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
 
+
+    <!-- Javascript third Party Plugins -->
     @yield('javascripts')
 
     <!-- Javascript functions and procedures -->
