@@ -28,7 +28,7 @@ Assign a profile to a User. The profile will contain most of the specific inform
 The profile record needs to be created at the moment of the user creation. In this example the Users table will control the basic access to the application, and the profile will grant access to specific routines and resources provided by the application.
 First, we need to create the basic CRUD infrastructure to maintain our users and profile tables
 
-´´´
+```php
 public function edit($id)
     {
         if (! Gate::allows('users_manage')) {
@@ -40,5 +40,4 @@ public function edit($id)
 
         return view('admin.roles.edit', compact('role', 'permissions'));
     }
-´´´
-
+```
