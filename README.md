@@ -40,5 +40,4 @@ public function edit($id)
 
         return view('admin.roles.edit', compact('role', 'permissions'));
     }
-    
 ```
