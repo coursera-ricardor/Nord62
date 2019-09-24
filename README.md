@@ -41,3 +41,9 @@ public function edit($id)
         return view('admin.roles.edit', compact('role', 'permissions'));
     }
 ```
+
+- [X] Basic Laravel Auth
+- [X] Spatie/Permissions
+- [X] Users / Profile Link
+
+
