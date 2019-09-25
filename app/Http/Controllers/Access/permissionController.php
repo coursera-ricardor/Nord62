@@ -16,12 +16,13 @@ class permissionController extends Controller
      * @todo: Add access restriction
      *
     */
-    /*
+    
     public function __construct()
     {
+        // $this->middleware('auth',['except' => ['index','show']]);
         $this->middleware('auth');
     }
-    */
+    
 
 
     /**

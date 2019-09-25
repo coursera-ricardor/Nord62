@@ -17,12 +17,14 @@ class roleController extends Controller
      * Creates a new Roles controller instance.
      *
      */
-    /*
+    
     public function __construct()
     {
-        $this->middleware('auth',['except' => ['index','show']]);
+        // $this->middleware('auth',['except' => ['index','show']]);
+        $this->middleware('auth');
+
     }
-    */
+    
 
 
     /**
