@@ -13,6 +13,19 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
 
+/*
+ *   Not required
+ use Illuminate\Support\Facades\Auth;
+
+  * Functionality included via $request or middleware auth         
+
+     if (! Auth::check()) {
+        dd('Login');
+     } else  {
+         dd(Auth::user()); // equivalent dd(auth()->user());
+     }
+*/
+
 class userController extends Controller
 {
 
@@ -23,7 +36,14 @@ class userController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth',['except' => ['index','show']]);
+        /*
+         * Example allowing some functionalities without login restriction
+        */
+        // $this->middleware('auth',['except' => ['index','show']]);
+
+        // Access to the Users table is restricted
+        $this->middleware('auth');
+
     }
 
 

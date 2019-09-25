@@ -46,6 +46,14 @@ class UsersTableSeeder extends Seeder
             ];
         $Records[] = 
             [
+                'username' => 'Guest',
+                'name' => 'Guest User',
+                'email' => 'guest@user.com',
+                'password' => bcrypt('password'),
+			    'status' => 'A',
+            ];
+        $Records[] = 
+            [
                 'username' => 'Tester',
                 'name' => 'System Tester User',
                 'email' => 'user@user.com',
