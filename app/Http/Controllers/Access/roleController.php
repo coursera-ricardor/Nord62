@@ -15,7 +15,7 @@ class roleController extends Controller
 
     /**
      * Creates a new Roles controller instance.
-     *
+     * Authentication can be done via routes/web.php
      */
     
     public function __construct()
