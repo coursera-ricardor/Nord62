@@ -14,9 +14,13 @@
             <div class="pull-left">
                 <h2>Laravel 5.8 CRUD Example</h2>
             </div>
-            <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('users.create') }}"> {{ __('Create') }}</a>
-            </div>
+
+            <!-- Authorization Requires Spatie/permissions-->
+            @can('create')
+                <div class="pull-right">
+                    <a class="btn btn-success" href="{{ route('users.create') }}"> {{ __('Create') }}</a>
+                </div>
+            @endcan
         </div>
     </div>
     @if ($message = Session::get('success'))
@@ -45,7 +49,12 @@
 						{{ $user->name }}
 					</td>
 					<td>
-						<a href="{{ route( $master_model . '.show',[$user->id]) }}">{{ $user->user_name }}</a>
+                        <!-- Authorization Requires Spatie/permissions-->
+                        @can('read')						
+    						<a href="{{ route( $master_model . '.show',[$user->id]) }}">{{ $user->username }}</a>
+                        @else
+                            {{ $user->username }}
+                        @endcan
 					</td>
 
                     <td>{{ $user->email }}</td>
@@ -58,19 +67,45 @@
 
                     <!-- Actions -->
 					<td>
-						
-						<a href="{{ route( $master_model . '.show',[$user->id]) }}" class="btn btn-xs btn-info">{{ __('Show') }}</a>
+                        <!-- Authorization Requires Spatie/permissions-->
+                        @can('read')						
+						    <a href="{{ route( $master_model . '.show',[$user->id]) }}" class="btn btn-xs btn-info">{{ __('Show') }}</a>
+                        @endcan
 
-						<a href="{{ route( $master_model . '.edit',[$user->id]) }}" class="btn btn-xs btn-info">{{ __('Edit') }}</a>
+                        <!-- fails if(auth()->user()->profile->can('read')) -->
+            			@foreach ( $profilePermissions as $profilePermission )
+                            <p>{{ $profilePermission }}</p>
+                        @endforeach
+
+                        @if($profilePermissions->search('read'))
+						    <a href="{{ route( $master_model . '.show',[$user->id]) }}" class="btn btn-xs btn-info">{{ __('Show') }}</a>
+                        @endif
+
+                        <!-- Authorization Requires Spatie/permissions-->
+                        @can('edit')
+						    <a href="{{ route( $master_model . '.edit',[$user->id]) }}" class="btn btn-xs btn-info">{{ __('Edit') }}</a>
+                        @endcan
+
+                        @if( in_array('edit',$profilePermissions->toArray()) )
+						    <a href="{{ route( $master_model . '.edit',[$user->id]) }}" class="btn btn-xs btn-info">{{ __('Edit') }}</a>
+                        @endif
+
+                        @if( in_array('edit', auth()->user()->profile->getAllPermissions()->pluck('name')->toArray() ) )
+						    <a href="{{ route( $master_model . '.edit',[$user->id]) }}" class="btn btn-xs btn-info">{{ __('Edit') }}</a>
+                        @endif
+
 							
-						<form method="POST" action="{{ route( $master_model . '.destroy', $user->id) }}" 
-							class="display: inline-block;"
-							onsubmit="return confirm( {{ @("global.app_are_you_sure") }} " >
-							@csrf
-							@method('DELETE')
+                        <!-- Authorization Requires Spatie/permissions-->
+                        @can('delete')
+						    <form method="POST" action="{{ route( $master_model . '.destroy', $user->id) }}" 
+							    class="display: inline-block;"
+							    onsubmit="return confirm( {{ @("global.app_are_you_sure") }} " >
+							    @csrf
+							    @method('DELETE')
 								
-							<button class="btn btn-xs btn-danger" type="submit">{{ __('Delete') }}</button>
-						</form>
+							    <button class="btn btn-xs btn-danger" type="submit">{{ __('Delete') }}</button>
+						    </form>
+                        @endcan
 					</td>
 
 				</tr>

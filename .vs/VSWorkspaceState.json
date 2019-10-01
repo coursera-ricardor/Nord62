@@ -1,16 +1,16 @@
 {
   "ExpandedNodes": [
     "",
+    "\\app",
+    "\\app\\Http\\Controllers",
+    "\\app\\Http\\Controllers\\Access",
+    "\\app\\Http\\Middleware",
+    "\\config",
     "\\database",
-    "\\database\\migrations",
-    "\\public\\css",
-    "\\resources\\js",
-    "\\resources\\js\\libs",
-    "\\resources\\sass",
+    "\\database\\seeds",
     "\\resources\\views",
-    "\\resources\\views\\access",
-    "\\resources\\views\\access\\permissions"
+    "\\resources\\views\\auth"
   ],
-  "SelectedNode": "\\resources",
+  "SelectedNode": "\\database\\migrations\\2019_09_07_090834_create_permission_tables.php",
   "PreviewInSolutionExplorer": false
 }

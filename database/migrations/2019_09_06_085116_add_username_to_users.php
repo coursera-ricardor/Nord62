@@ -13,17 +13,26 @@ class AddUsernameToUsers extends Migration
      */
     public function up()
     {
+        // Add the field
         Schema::table('users', function (Blueprint $table) {
             $table->string('username')->after('name')->nullable();
             $table->string('status',1)->default('C')->after('password'); // A-ctive P-rotected  B-locked R-estricted C-onfirmation Required
         });
 
-        $usersRows = DB::table('users')->get(['id','email']);
+        /*
+         * Transfer the email as username if username is empty.
+         * @todo: Username Change to be implemented.
+        */
+        $usersRows = DB::table('users')->whereNull('username')->get(['id','email']);
 
         foreach ($usersRows as $userRow) {
             DB::table('users')->where('id',$userRow->id)->update(['username' => $userRow->email]);
         }
 
+        /*
+            username Index creation
+            email index drop to allow the use of the same email in several accounts
+        */
         Schema::table('users', function (Blueprint $table) {
             // Change the field to not nullable
             $table->string('username')->nullable(false)->change();

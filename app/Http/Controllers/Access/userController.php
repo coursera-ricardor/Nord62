@@ -41,8 +41,11 @@ class userController extends Controller
         */
         // $this->middleware('auth',['except' => ['index','show']]);
 
-        // Access to the Users table is restricted
+        // Access to the Users table is restricted,
+        // the user needs to login first
         $this->middleware('auth');
+
+        // Specific permissions required to access the options of the Controller
 
     }
 
@@ -54,12 +57,46 @@ class userController extends Controller
      */
     public function index()
     {
+        /*
+            Spatie/permissions
+            @todo: Main table associated to roles and permissions is "Profile", the @can() directive needs to be updated.
+
+        */
+        // dd(auth()->user()->name);
+        // dd(auth()->user()->getAllPermissions()); // returns empty
+        // dd(auth()->user()->profile->getAllPermissions()); // returns collection with permissions
+        $profilePermissions = auth()->user()->profile->getAllPermissions()->pluck('name');
+
         // Master Model - Main Table
         $master_model = 'users';
 
         // $roles = Role::orderby('id', 'desc')->get();
-        $users = User::orderby('id', 'desc')->get();
-        return view('access.users.index',compact('users','master_model'));
+
+        /*
+            Record Access Control
+                - Read [ All | Owner | Group | Other]
+
+            [A]-ll records can be viewed
+        */
+        // $users = User::orderby('id', 'desc')->get();
+        /*
+            [O]-wner Only records created_by can be viewed.
+            To implement this control, Auth implementation is required first, to identify the User credentials.
+            The rights assignation control required an additional implementation.
+
+                auth()->id()        // returns the id of the logged user
+                auth()->user()      // returns the logged user
+                auth()->check()     // checks if someone is logged in
+                auth()->guest()     // checks if guest
+
+            @todo: Spatie\Permissions does not have owner_id in the record implemented.
+                add the field and the index in the migration: $table->foreign('owner_id')->references('id')->on('users');
+
+        */
+        $users = User::where('id',auth()->id())->orderby('id', 'desc')->get();
+
+
+        return view('access.users.index',compact('users','master_model','profilePermissions'));
     }
 
     /**
@@ -81,6 +118,10 @@ class userController extends Controller
     public function store(Request $request)
     {
         //
+        // User::create($request + ['owner_id' => auth()->id()]);
+        //
+        // Adding to the request
+        // $request['owner_id'] = auth()->id();
     }
 
     /**
@@ -89,9 +130,38 @@ class userController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $user)
     {
-        //
+        /*
+            Condition is failing due the relationship returns STRING instead of INTEGER
+                if ($user->profile->owner_id !== auth()->id() )
+
+            Options to solve the problem,
+                - Cast the returned value when required
+                - Cast the auth()->id() to STRING
+                - Modify the Model using $casts[] array and cast the field to INTEGER
+        */
+        // dd($theProfile->id); // returns integer
+        // dd($user->profile->owner_id); // returns string
+        // $theProfile = $user->profile;
+
+        // dd($user->id); // automatic conversion 
+        // dd(auth()->id()); // automatic conversion
+
+        /*
+        *  Authorization
+        */
+        // if ($user->profile->owner_id !== auth()->id() ) {
+        if ($user->profile->owner_id !== strval(auth()->id()) ) {
+            abort(403);
+        }
+        // laravel helper
+        // abort_if($user->profile->owner_id !== auth()->id(), 403);
+        // Via Policy control, creating the logic in the Policies/UserPolicy.php with the command:
+        //  php artisan make:policy ProfilePolicy –model=Profile
+        // It requires to update the Providers/AuthServiceProvider.php
+        // $this->authorize('view',$user->profile);
+        // dd($user->profile);
     }
 
     /**
@@ -235,7 +305,7 @@ class userController extends Controller
         //
         $profileInfo = $user->profile;
         // dd($profileInfo);
-        // dd($request->input('permissionsAssigned'));
+        // dd($request->input('permissionsAssigned')); // list of the permissions to be assigned
 
         // $profileInfo->roles()->sync($request->input('rolesAssigned'));
         $this->syncPermissions($profileInfo, $request->input('permissionsAssigned'));
@@ -285,7 +355,7 @@ class userController extends Controller
                     'email' => $mainUser->email,
                     'status' => $mainUser->status,
                     // User needs to be authenticated first, if not an error will occur
-                    'updated_by' => auth()->user()->id,
+                    'owner_id' => auth()->user()->id,
                     // Update - Do not change if the record has a value indicated in the array $updProfile
                     'created_by' => (( empty($updProfile) || (! array_key_exists('created_by',$updProfile)) ) ? auth()->user()->id : $updProfile['created_by']),
                 ]
@@ -300,7 +370,7 @@ class userController extends Controller
      }
 
     /**
-     * Sync up the list of permissions assigned to the Role
+     * Sync up the list of roles assigned to the Profile
      *
      * @param  Profile  $profile
      * @param  array  $rolesToUpdate
@@ -311,7 +381,7 @@ class userController extends Controller
     }
 
     /**
-     * Sync up the list of permissions assigned to the Role
+     * Sync up the list of permissions assigned to the Profile
      *
      * @param  Profile  $profile
      * @param  array  $rolesToUpdate
