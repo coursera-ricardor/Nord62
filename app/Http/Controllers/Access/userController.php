@@ -65,7 +65,19 @@ class userController extends Controller
         // dd(auth()->user()->name);
         // dd(auth()->user()->getAllPermissions()); // returns empty
         // dd(auth()->user()->profile->getAllPermissions()); // returns collection with permissions
-        $profilePermissions = auth()->user()->profile->getAllPermissions()->pluck('name');
+
+        /*
+            If the profile does not exists, and Exception is created.
+            The profile is created only via:
+                User / Edit
+                User Validation and Authorization.
+        */
+        try {
+            $profilePermissions = auth()->user()->profile->getAllPermissions()->pluck('name');        
+        } catch ( Exception $ex) {
+            report($ex);
+        }
+
 
         // Master Model - Main Table
         $master_model = 'users';
@@ -152,8 +164,12 @@ class userController extends Controller
         *  Authorization
         */
         // if ($user->profile->owner_id !== auth()->id() ) {
+        // dd($user->id);
+        // dd($user->profile->user_id);
+        // dd($user->profile->owner_id);
+
         if ($user->profile->owner_id !== strval(auth()->id()) ) {
-            abort(403);
+            abort(403,__('Record not owned'));
         }
         // laravel helper
         // abort_if($user->profile->owner_id !== auth()->id(), 403);
