@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Access;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+// Example using Gate
+use Illuminate\Support\Facades\Gate;
+
 use App\User;
 use App\Profile;
 
@@ -43,7 +46,7 @@ class userController extends Controller
 
         // Access to the Users table is restricted,
         // the user needs to login first
-        $this->middleware('auth');
+        // $this->middleware('auth');
 
         // Specific permissions required to access the options of the Controller
 
@@ -57,6 +60,11 @@ class userController extends Controller
      */
     public function index()
     {
+
+        /*
+            Policies Authorization
+        */
+
         /*
             Spatie/permissions
             @todo: Main table associated to roles and permissions is "Profile", the @can() directive needs to be updated.
@@ -67,15 +75,24 @@ class userController extends Controller
         // dd(auth()->user()->profile->getAllPermissions()); // returns collection with permissions
 
         /*
-            If the profile does not exists, and Exception is created.
-            The profile is created only via:
+            If there is not user logged in an Exception is created.
+            - Authentication should be validated first, via Route middleware or at __Construct section.
+            - The profile is created only via:
                 User / Edit
                 User Validation and Authorization.
+            - After the authentication control is implemented, it should work without the if-then-else:
+                $profilePermissions = auth()->user()->profile->getAllPermissions()->pluck('name');        
+
         */
-        try {
-            $profilePermissions = auth()->user()->profile->getAllPermissions()->pluck('name');        
-        } catch ( Exception $ex) {
-            report($ex);
+        // if ( ! is_null(auth()->user())) {
+        if ( auth()->check() && ( ! is_null(auth()->user()->profile )) ) {
+            try {
+                $profilePermissions = auth()->user()->profile->getAllPermissions()->pluck('name');        
+            } catch ( Exception $ex) {
+                echo $ex->getMessage();
+            }        
+        } else {
+            $profilePermissions = collect([]);
         }
 
 
@@ -90,7 +107,7 @@ class userController extends Controller
 
             [A]-ll records can be viewed
         */
-        // $users = User::orderby('id', 'desc')->get();
+        $users = User::orderby('id', 'desc')->get();
         /*
             [O]-wner Only records created_by can be viewed.
             To implement this control, Auth implementation is required first, to identify the User credentials.
@@ -105,7 +122,7 @@ class userController extends Controller
                 add the field and the index in the migration: $table->foreign('owner_id')->references('id')->on('users');
 
         */
-        $users = User::where('id',auth()->id())->orderby('id', 'desc')->get();
+        // $users = User::where('id',auth()->id())->orderby('id', 'desc')->get();
 
 
         return view('access.users.index',compact('users','master_model','profilePermissions'));
@@ -150,7 +167,7 @@ class userController extends Controller
 
             Options to solve the problem,
                 - Cast the returned value when required
-                - Cast the auth()->id() to STRING
+                - Cast the auth()->id() as STRING or $user->profile->owner_id as INTEGER
                 - Modify the Model using $casts[] array and cast the field to INTEGER
         */
         // dd($theProfile->id); // returns integer
@@ -163,13 +180,73 @@ class userController extends Controller
         /*
         *  Authorization
         */
-        // if ($user->profile->owner_id !== auth()->id() ) {
         // dd($user->id);
         // dd($user->profile->user_id);
         // dd($user->profile->owner_id);
+        /*
+         * Using Policies\ProfilePolicy.php
+         *  These calls are not standard, In this case calling an authorization using other Model class.
+         * 
+        */
+        // $this->authorize('viewAny',Profile::class); // Call to the ProfilePolicy.php even if it is not registered in Providers\AuthServiceProvider.php
+        // $this->authorize('view',[Profile::class,$user->profile]); // Call to the ProfilePolicy.php even if it is not registered in Providers\AuthServiceProvider.php
 
-        if ($user->profile->owner_id !== strval(auth()->id()) ) {
-            abort(403,__('Record not owned'));
+        /*
+         * Gate Test
+         * Note: Any Authorizable model can be used in the Gate call
+        */
+/*
+        //
+        // Test sending the User RECORD as the main object
+        //
+        // if( Gate::forUser(auth()->user())->allows('test-gate', $user->id)) {
+        if( Gate::forUser($user->profile)->allows('test-gate', $user->id)) {
+            if( Gate::forUser($user->profile)->allows('test-gate', $user->profile->id)) {
+                dd('ok');
+            } else {
+                dd('fail');
+            }        
+        } else {
+           abort(403,'fail - not logged in OR No Profile defined');
+        }
+
+        //
+        // Test sending the Auth user as the main object
+        //
+        if( auth()->check() && (! is_Null(auth()->user()->profile) )) {
+            if( Gate::forUser(auth()->user()->profile)->allows('test-gate', $user->profile->id)) {
+                dd('ok');
+            } else {
+                dd('fail');
+            }        
+        } else {
+           abort(403,'fail - not logged in OR No Profile defined');
+        }
+
+*/
+        /*
+         * Using Policies\UserPolicy.php
+         *  Basic Validation: if ($user->profile->owner_id !== auth()->id() )
+         * 
+        */
+        // dd($user->can('browse')); // Returns false
+        // dd($user->profile->can('browse')); // Returns true
+
+        // $this->authorize('view',$user); // Uses UserPolicy
+        $this->authorize('view',$user->profile); // Uses ProfilePolicy
+
+        /*
+          Same validation in the controller.
+          - Profile record existance validation required
+        */
+        if (is_null($user->profile)){
+            if ( auth()->id() !== $user->id ) {
+                abort(403,__('Record not owned'));
+            }        
+        } else {
+            if ($user->profile->owner_id !== strval(auth()->id()) ) {
+                abort(403,__('Record not owned'));
+            }        
         }
         // laravel helper
         // abort_if($user->profile->owner_id !== auth()->id(), 403);
@@ -178,6 +255,8 @@ class userController extends Controller
         // It requires to update the Providers/AuthServiceProvider.php
         // $this->authorize('view',$user->profile);
         // dd($user->profile);
+
+        dd('return the User View');
     }
 
     /**

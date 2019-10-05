@@ -46,9 +46,9 @@ public function edit($id)
 
 Add the fields to control the access by record to all the tables, additional indexes are needed.
 
-    field | description
-    ---|---
-    owner_id | User id who created the record
+| field | description
+| ---: | ---:
+| owner_id | User id who created the record
 
 ```
     // Filtered by owner_id
@@ -66,10 +66,10 @@ Add the fields to control the access by record to all the tables, additional ind
 
     All new tables should have the suggested fields:
 
-    field | description
-    ---|---
-    owner_id | User id who created the record
-    updated_id | User id who created the record
+| field | description
+| ---: | ---:
+| owner_id | User id who created the record
+| updated_id | User id who created the record
 
 
 #### Options

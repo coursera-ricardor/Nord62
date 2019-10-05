@@ -2,7 +2,8 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+// use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 // Notifications
 // use Illuminate\Notifications\Notifiable;
@@ -11,7 +12,9 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Traits\HasRoles;
 
 
-class Profile extends Model
+// class Profile extends Model
+class Profile extends Authenticatable
+
 {
 
     // use Notifiable;

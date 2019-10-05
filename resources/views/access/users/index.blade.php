@@ -90,12 +90,33 @@
 						    <a href="{{ route( $master_model . '.edit',[$user->id]) }}" class="btn btn-xs btn-info">{{ __('Edit') }}</a>
                         @endif
 
-                        @if( in_array('edit', auth()->user()->profile->getAllPermissions()->pluck('name')->toArray() ) )
-						    <a href="{{ route( $master_model . '.edit',[$user->id]) }}" class="btn btn-xs btn-info">{{ __('Edit') }}</a>
+                        <!--
+                            Really annoying validation.
+                            @todo: Change the validation to the controller
+                        -->
+                        @if( auth()->check() && (! is_Null(auth()->user()->profile) ))
+                            @if( in_array('edit', auth()->user()->profile->getAllPermissions()->pluck('name')->toArray() ) )
+						        <a href="{{ route( $master_model . '.edit',[$user->id]) }}" class="btn btn-xs btn-info">{{ __('Edit') }}</a>
+                            @endif
                         @endif
 
 							
                         <!-- Authorization Requires Spatie/permissions-->
+
+                        @if( auth()->check() && (! is_Null(auth()->user()->profile) ))
+                            @if(auth()->user()->profile->can('delete'))
+						        <form method="POST" action="{{ route( $master_model . '.destroy', $user->id) }}" 
+							        class="display: inline-block;"
+							        onsubmit="return confirm( {{ @("global.app_are_you_sure") }} " >
+							        @csrf
+							        @method('DELETE')
+								
+							        <button class="btn btn-xs btn-danger" type="submit">{{ __('Delete') }}</button>
+						        </form>
+                            @endif
+                        @endif
+
+                        <!--to validate -->
                         @can('delete')
 						    <form method="POST" action="{{ route( $master_model . '.destroy', $user->id) }}" 
 							    class="display: inline-block;"

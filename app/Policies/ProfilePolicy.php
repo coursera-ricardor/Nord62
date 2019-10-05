@@ -19,19 +19,31 @@ class ProfilePolicy
     public function viewAny(User $user)
     {
         //
+        dd('Profile Class Any');
     }
 
     /**
      * Determine whether the user can view the profile.
      *
-     * @param  \App\User  $user
+     * @param  \App\User  $user - Logged User
      * @param  \App\Profile  $profile
      * @return mixed
      */
     public function view(User $user, Profile $profile)
     {
+
+        // dd('ProfilePolicy');
+        dd($user);
+        // dd($profile);
+
+        return auth()->user()->profile->can('browse');
+
+        dd(auth()->user()->profile->can('browseing'));
+        dd('Profile Class View');
         // Basic validation to restrict to view the content to the owner of the record.
-        return $profile->owner_id = $user->id;
+        // if there is not login user $user is null.
+        // dd($profile->owner_id);
+        return $profile->owner_id == strval($user->id);
     }
 
     /**
