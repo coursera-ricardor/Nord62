@@ -24,6 +24,7 @@ class Profile extends Authenticatable
      *
     */
     use HasRoles;
+    protected $guard_name = 'web';
 
 
     /**
@@ -38,7 +39,7 @@ class Profile extends Authenticatable
         'language_id','language_code','language',
         'country_id','country_code','country','state_id','state_code','state','zip_code',
         'street','street_number','city',
-        'latitude','longitude','owner_id','updated_by','status',
+        'latitude','longitude','owner_id','updated_id','status',
     ];
 
     /**
@@ -58,6 +59,9 @@ class Profile extends Authenticatable
         // 'owner_id' => 'integer',
     ];
 
+    /* -----------------------------------------------------
+     * Relationships
+    /* -----------------------------------------------------
 
     /*
         Get the User associated with the Profile
@@ -65,4 +69,14 @@ class Profile extends Authenticatable
     public function user() {
         return $this->belongsTo('App\User');
     }
+
+    /*
+        Projects associated with the Profile
+        Without the second paramenter the Pivot table name: 'profile_project'
+        Validate the 3rd and 4rd Paramenters They are switched in each linked Model
+    */
+    public function projects() {
+        return $this->belongsToMany('App\Project','profile_has_projects','profile_id','project_id');
+    }
+
 }

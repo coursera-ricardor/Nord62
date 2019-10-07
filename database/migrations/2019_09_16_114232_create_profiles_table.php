@@ -22,7 +22,7 @@ class CreateProfilesTable extends Migration
                 to be able to create the link.
                 The Model needs to be reviewed
             */
-			$table->bigInteger('user_id');
+			$table->bigInteger('user_id')->unique();
 			if (Schema::hasTable('users')) {
                 // Foreign Key
 				$table->foreign('user_id')->references('id')->on('users')
@@ -69,7 +69,7 @@ class CreateProfilesTable extends Migration
 			/** 
 			 	
 				Log information
-                Model needs to be review to achieve this behavior
+                Model needs to be reviewed to achieve this behavior
 				
 			*/
 			if (Schema::hasTable('users')) {

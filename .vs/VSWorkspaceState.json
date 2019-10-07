@@ -2,15 +2,15 @@
   "ExpandedNodes": [
     "",
     "\\app",
+    "\\app\\Http",
     "\\app\\Http\\Controllers",
-    "\\app\\Http\\Controllers\\Access",
-    "\\app\\Http\\Middleware",
+    "\\app\\Http\\Controllers\\Op",
     "\\config",
     "\\database",
-    "\\database\\seeds",
-    "\\resources\\views",
-    "\\resources\\views\\auth"
+    "\\database\\migrations",
+    "\\resources",
+    "\\routes"
   ],
-  "SelectedNode": "\\database\\migrations\\2019_09_07_090834_create_permission_tables.php",
+  "SelectedNode": "\\app\\Project.php",
   "PreviewInSolutionExplorer": false
 }

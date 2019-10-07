@@ -109,7 +109,7 @@ class userController extends Controller
         */
         $users = User::orderby('id', 'desc')->get();
         /*
-            [O]-wner Only records created_by can be viewed.
+            [O]-wner Only records owner_id can be viewed.
             To implement this control, Auth implementation is required first, to identify the User credentials.
             The rights assignation control required an additional implementation.
 
@@ -321,7 +321,7 @@ class userController extends Controller
 			]);
         
         $user->update($request->all());
-        $this->profileUpdate($user,['created_by' => $user->profile->created_by]);
+        $this->profileUpdate($user,['owner_id' => $user->profile->owner_id]);
 
         return back()->with('success', 'User Updated');
     }
@@ -434,12 +434,12 @@ class userController extends Controller
         // Create
         $this->profileUpdate($user);
         // Update
-        $this->ProfileUpdate($user,['created_by' => $user->profile->created_by]);
+        $this->ProfileUpdate($user,['owner_id' => $user->profile->owner_id]);
 
      */
      private function profileUpdate(User $mainUser, $updProfile = [] ) {
-        // dd(array_key_exists('created_by',$updProfile));
-        // dd($updProfile['created_by']);
+        // dd(array_key_exists('owner_id',$updProfile));
+        // dd($updProfile['owner_id']);
         // dd($updProfile);
         try {
            // dd($mainUser->toArray());
@@ -450,9 +450,9 @@ class userController extends Controller
                     'email' => $mainUser->email,
                     'status' => $mainUser->status,
                     // User needs to be authenticated first, if not an error will occur
-                    'owner_id' => auth()->user()->id,
+                    'updated_id' => auth()->user()->id,
                     // Update - Do not change if the record has a value indicated in the array $updProfile
-                    'created_by' => (( empty($updProfile) || (! array_key_exists('created_by',$updProfile)) ) ? auth()->user()->id : $updProfile['created_by']),
+                    'owner_id' => (( empty($updProfile) || (! array_key_exists('owner_id',$updProfile)) ) ? auth()->user()->id : $updProfile['owner_id']),
                 ]
            );
 
