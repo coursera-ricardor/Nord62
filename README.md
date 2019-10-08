@@ -48,11 +48,11 @@ Add the fields to control the access by record to all the tables, additional ind
 
 | field | description
 | ---: | ---:
-| owner_id | User id who created the record
+| created_by | User id who created the record
 
 ```
-    // Filtered by owner_id
-    $users = User::where('owner_id',auth()->id())->orderby('id', 'desc')->get();
+    // Filtered by created_by
+    $users = User::where('created_by',auth()->id())->orderby('id', 'desc')->get();
 
 ```
 
@@ -68,8 +68,8 @@ Add the fields to control the access by record to all the tables, additional ind
 
 | field | description
 | ---: | ---:
-| owner_id | User id who created the record
-| updated_id | User id who created the record
+| created_by | User id who created the record
+| updated_by | User id who created the record
 
 
 #### Options

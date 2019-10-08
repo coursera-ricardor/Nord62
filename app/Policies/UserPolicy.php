@@ -54,8 +54,8 @@ class UserPolicy
         if( is_null($model->profile)) {
         
         }
-        dd($model->profile->owner_id);
-        return $profile->owner_id == strval($user->id);
+        dd($model->profile->created_by);
+        return $profile->created_by == strval($user->id);
 
     }
 

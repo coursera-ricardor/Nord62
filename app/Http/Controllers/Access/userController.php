@@ -109,7 +109,7 @@ class userController extends Controller
         */
         $users = User::orderby('id', 'desc')->get();
         /*
-            [O]-wner Only records owner_id can be viewed.
+            [O]-wner Only records created_by can be viewed.
             To implement this control, Auth implementation is required first, to identify the User credentials.
             The rights assignation control required an additional implementation.
 
@@ -118,8 +118,8 @@ class userController extends Controller
                 auth()->check()     // checks if someone is logged in
                 auth()->guest()     // checks if guest
 
-            @todo: Spatie\Permissions does not have owner_id in the record implemented.
-                add the field and the index in the migration: $table->foreign('owner_id')->references('id')->on('users');
+            @todo: Spatie\Permissions does not have created_by in the record implemented.
+                add the field and the index in the migration: $table->foreign('created_by')->references('id')->on('users');
 
         */
         // $users = User::where('id',auth()->id())->orderby('id', 'desc')->get();
@@ -147,10 +147,10 @@ class userController extends Controller
     public function store(Request $request)
     {
         //
-        // User::create($request + ['owner_id' => auth()->id()]);
+        // User::create($request + ['created_by' => auth()->id()]);
         //
         // Adding to the request
-        // $request['owner_id'] = auth()->id();
+        // $request['created_by'] = auth()->id();
     }
 
     /**
@@ -163,15 +163,15 @@ class userController extends Controller
     {
         /*
             Condition is failing due the relationship returns STRING instead of INTEGER
-                if ($user->profile->owner_id !== auth()->id() )
+                if ($user->profile->created_by !== auth()->id() )
 
             Options to solve the problem,
                 - Cast the returned value when required
-                - Cast the auth()->id() as STRING or $user->profile->owner_id as INTEGER
+                - Cast the auth()->id() as STRING or $user->profile->created_by as INTEGER
                 - Modify the Model using $casts[] array and cast the field to INTEGER
         */
         // dd($theProfile->id); // returns integer
-        // dd($user->profile->owner_id); // returns string
+        // dd($user->profile->created_by); // returns string
         // $theProfile = $user->profile;
 
         // dd($user->id); // automatic conversion 
@@ -182,7 +182,7 @@ class userController extends Controller
         */
         // dd($user->id);
         // dd($user->profile->user_id);
-        // dd($user->profile->owner_id);
+        // dd($user->profile->created_by);
         /*
          * Using Policies\ProfilePolicy.php
          *  These calls are not standard, In this case calling an authorization using other Model class.
@@ -226,7 +226,7 @@ class userController extends Controller
 */
         /*
          * Using Policies\UserPolicy.php
-         *  Basic Validation: if ($user->profile->owner_id !== auth()->id() )
+         *  Basic Validation: if ($user->profile->created_by !== auth()->id() )
          * 
         */
         // dd($user->can('browse')); // Returns false
@@ -244,12 +244,12 @@ class userController extends Controller
                 abort(403,__('Record not owned'));
             }        
         } else {
-            if ($user->profile->owner_id !== strval(auth()->id()) ) {
+            if ($user->profile->created_by !== strval(auth()->id()) ) {
                 abort(403,__('Record not owned'));
             }        
         }
         // laravel helper
-        // abort_if($user->profile->owner_id !== auth()->id(), 403);
+        // abort_if($user->profile->created_by !== auth()->id(), 403);
         // Via Policy control, creating the logic in the Policies/UserPolicy.php with the command:
         //  php artisan make:policy ProfilePolicy –model=Profile
         // It requires to update the Providers/AuthServiceProvider.php
@@ -321,7 +321,7 @@ class userController extends Controller
 			]);
         
         $user->update($request->all());
-        $this->profileUpdate($user,['owner_id' => $user->profile->owner_id]);
+        $this->profileUpdate($user,['created_by' => $user->profile->created_by]);
 
         return back()->with('success', 'User Updated');
     }
@@ -434,12 +434,12 @@ class userController extends Controller
         // Create
         $this->profileUpdate($user);
         // Update
-        $this->ProfileUpdate($user,['owner_id' => $user->profile->owner_id]);
+        $this->ProfileUpdate($user,['created_by' => $user->profile->created_by]);
 
      */
      private function profileUpdate(User $mainUser, $updProfile = [] ) {
-        // dd(array_key_exists('owner_id',$updProfile));
-        // dd($updProfile['owner_id']);
+        // dd(array_key_exists('created_by',$updProfile));
+        // dd($updProfile['created_by']);
         // dd($updProfile);
         try {
            // dd($mainUser->toArray());
@@ -450,9 +450,9 @@ class userController extends Controller
                     'email' => $mainUser->email,
                     'status' => $mainUser->status,
                     // User needs to be authenticated first, if not an error will occur
-                    'updated_id' => auth()->user()->id,
+                    'updated_by' => auth()->user()->id,
                     // Update - Do not change if the record has a value indicated in the array $updProfile
-                    'owner_id' => (( empty($updProfile) || (! array_key_exists('owner_id',$updProfile)) ) ? auth()->user()->id : $updProfile['owner_id']),
+                    'created_by' => (( empty($updProfile) || (! array_key_exists('created_by',$updProfile)) ) ? auth()->user()->id : $updProfile['created_by']),
                 ]
            );
 

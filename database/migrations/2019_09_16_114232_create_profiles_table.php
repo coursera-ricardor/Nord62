@@ -73,8 +73,8 @@ class CreateProfilesTable extends Migration
 				
 			*/
 			if (Schema::hasTable('users')) {
-				$table->bigInteger('owner_id');
-				$table->bigInteger('updated_id');
+				$table->bigInteger('created_by');
+				$table->bigInteger('updated_by');
 			}
 
             // Status

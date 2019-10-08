@@ -22,8 +22,8 @@ class ProfilesProjectsTableSeeder extends Seeder
                 'project_id' => 1,
                 'profile_id' => 1,
 			    'status' => 'A', // A-ctive P-rotected  B-locked R-estricted C-onfirmation Required
-                'owner_id' => 1,
-                'updated_id' => 1,
+                'created_by' => 1,
+                'updated_by' => 1,
                 // 'roles' => ['System Administrator'],
 
             ];
@@ -32,8 +32,8 @@ class ProfilesProjectsTableSeeder extends Seeder
                 'project_id' => 1,
                 'profile_id' => 2,
 			    'status' => 'A', // A-ctive P-rotected  B-locked R-estricted C-onfirmation Required
-                'owner_id' => 1,
-                'updated_id' => 1,
+                'created_by' => 1,
+                'updated_by' => 1,
                 // 'roles' => ['System Administrator', 'System User'],
             ];
         $Records[] = 
@@ -41,8 +41,8 @@ class ProfilesProjectsTableSeeder extends Seeder
                 'project_id' => 1,
                 'profile_id' => 4,
 			    'status' => 'A', // A-ctive P-rotected  B-locked R-estricted C-onfirmation Required
-                'owner_id' => 1,
-                'updated_id' => 1,
+                'created_by' => 1,
+                'updated_by' => 1,
                 // 'roles' => ['System Administrator', 'System User','System Tester User'],
             ];
         $Records[] = 
@@ -50,8 +50,8 @@ class ProfilesProjectsTableSeeder extends Seeder
                 'project_id' => 2,
                 'profile_id' => 1,
 			    'status' => 'A', // A-ctive P-rotected  B-locked R-estricted C-onfirmation Required
-                'owner_id' => 1,
-                'updated_id' => 1,
+                'created_by' => 1,
+                'updated_by' => 1,
             ];
         // Duplicated Record Test
         $Records[] = 
@@ -59,24 +59,24 @@ class ProfilesProjectsTableSeeder extends Seeder
                 'project_id' => 2,
                 'profile_id' => 1,
 			    'status' => 'A', // A-ctive P-rotected  B-locked R-estricted C-onfirmation Required
-                'owner_id' => 1,
-                'updated_id' => 1,
+                'created_by' => 1,
+                'updated_by' => 1,
             ];
         $Records[] = 
             [
                 'project_id' => 2,
                 'profile_id' => 2,
 			    'status' => 'A', // A-ctive P-rotected  B-locked R-estricted C-onfirmation Required
-                'owner_id' => 1,
-                'updated_id' => 1,
+                'created_by' => 1,
+                'updated_by' => 1,
             ];
         $Records[] = 
             [
                 'project_id' => 3,
                 'profile_id' => 1,
 			    'status' => 'A', // A-ctive P-rotected  B-locked R-estricted C-onfirmation Required
-                'owner_id' => 1,
-                'updated_id' => 1,
+                'created_by' => 1,
+                'updated_by' => 1,
             ];
 
         //

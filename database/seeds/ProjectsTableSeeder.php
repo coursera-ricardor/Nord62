@@ -22,29 +22,29 @@ class ProjectsTableSeeder extends Seeder
             [
                 'name' => 'Course A',
 			    'status' => 'A', // A-ctive P-rotected  B-locked R-estricted C-onfirmation Required
-                'owner_id' => 1,
-                'updated_id' => 1,
+                'created_by' => 1,
+                'updated_by' => 1,
             ];
         $Records[] = 
             [
                 'name' => 'Course B',
 			    'status' => 'A', // A-ctive P-rotected  B-locked R-estricted C-onfirmation Required
-                'owner_id' => 1,
-                'updated_id' => 1,
+                'created_by' => 1,
+                'updated_by' => 1,
             ];
         $Records[] = 
             [
                 'name' => 'Course C',
 			    'status' => 'A', // A-ctive P-rotected  B-locked R-estricted C-onfirmation Required
-                'owner_id' => 1,
-                'updated_id' => 1,
+                'created_by' => 1,
+                'updated_by' => 1,
             ];
         $Records[] = 
             [
                 'name' => 'Course D',
 			    'status' => 'A', // A-ctive P-rotected  B-locked R-estricted C-onfirmation Required
-                'owner_id' => 1,
-                'updated_id' => 1,
+                'created_by' => 1,
+                'updated_by' => 1,
             ];
 
         //

@@ -42,8 +42,8 @@ class ProfilePolicy
         dd('Profile Class View');
         // Basic validation to restrict to view the content to the owner of the record.
         // if there is not login user $user is null.
-        // dd($profile->owner_id);
-        return $profile->owner_id == strval($user->id);
+        // dd($profile->created_by);
+        return $profile->created_by == strval($user->id);
     }
 
     /**
