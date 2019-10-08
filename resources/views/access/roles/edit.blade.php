@@ -44,17 +44,14 @@
                 -->
                 <div class="form-group row col-md-12">
 		            <div class="col-md-5">
-					    <label for="multiview" class="control-label">{{ __('Permissions Available') }}</label>
-			            <select name="permissionsAvailable[]" id="multiview" class="form-control" size="14" multiple="multiple">
+					    <label for="multiview_to" class="control-label">{{ __('Permissions Assigned') }}</label>
+			            <select name="permissionsAssigned[]" id="multiview" class="form-control" size="14" multiple="multiple">
 						    <!-- Search in the Collection -->
-						    @foreach ( $permissionsToSelect as $keyPermission => $permissionAvailable )
-                                @if( ! $role->permissions()->pluck('name','name')->has($permissionAvailable) )
-                                    <option value="{{ $keyPermission }}">{{ $permissionAvailable }}
-                                    </option>
-                                @endif
-
-						    @endforeach						
-			            </select>
+						    @foreach ( $permissionsAssigned as $keyPermission => $permission )
+							    <option value="{{ old('permissions[]') ? old('permissions[]') : $keyPermission }}" >{{ $permission }}
+							    </option>
+						    @endforeach
+                        </select>
 		            </div>
 				
 		            <div class="col-md-2">
@@ -69,14 +66,17 @@
 		            </div>
 				
 		            <div class="col-md-5">
-					    <label for="multiview_to" class="control-label">{{ __('Permissions Assigned') }}</label>
-			            <select name="permissionsAssigned[]" id="multiview_to" class="form-control" size="14" multiple="multiple">
+					    <label for="multiview" class="control-label">{{ __('Permissions Available') }}</label>
+			            <select name="permissionsAvailable[]" id="multiview_to" class="form-control" size="14" multiple="multiple">
 						    <!-- Search in the Collection -->
-						    @foreach ( $permissionsAssigned as $keyPermission => $permission )
-							    <option value="{{ old('permissions[]') ? old('permissions[]') : $keyPermission }}" >{{ $permission }}
-							    </option>
-						    @endforeach
-                        </select>
+						    @foreach ( $permissionsToSelect as $keyPermission => $permissionAvailable )
+                                @if( ! $role->permissions()->pluck('name','name')->has($permissionAvailable) )
+                                    <option value="{{ $keyPermission }}">{{ $permissionAvailable }}
+                                    </option>
+                                @endif
+
+						    @endforeach						
+			            </select>
 		            </div>
 
 	            </div>				

@@ -60,6 +60,14 @@ class UsersTableSeeder extends Seeder
                 'password' => bcrypt('password'),
 			    'status' => 'C',
             ];
+        $Records[] = 
+            [
+                'username' => 'Master',
+                'name' => 'Master System User',
+                'email' => 'user@user.com',
+                'password' => bcrypt('password'),
+			    'status' => 'A',
+            ];
 
 
         //
@@ -139,7 +147,17 @@ class UsersTableSeeder extends Seeder
     private function createRecordClass( $dbModel, $dbRecords) {
         foreach ($dbRecords as $dbRecord) {
             try {
-                $dbModel::create($dbRecord);
+                $newRecord = $dbModel::create($dbRecord);
+
+                /*
+                 * Adding the owner_id to the record.
+                 *  Note: Activate only if the fields exist in the table
+                */
+                /*
+                $newRecord->owner_id = $newRecord->id;
+                $newRecord->updated_by = $newRecord->id;
+                $newRecord->save();
+                */
             }
             // @todo: Include the QueryException to allow to continue the excecution
             catch (\Illuminate\Database\QueryException $ex) {

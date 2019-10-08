@@ -29,7 +29,7 @@
 					<th style="text-align:center;"><input type="checkbox" id="select-all" /></th>
 					<th>@lang('access.roles.fields.name')</th>
                     <th>{{ __('Description') }}</th>
-                    <th>{{ __('Related Roles') }}</th>
+                    <th>{{ __('Related Permissions') }}</th>
 
 					<th>&nbsp;</th>
 				</tr>

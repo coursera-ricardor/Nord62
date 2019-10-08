@@ -22,7 +22,7 @@ class CreateProfilesTable extends Migration
                 to be able to create the link.
                 The Model needs to be reviewed
             */
-			$table->bigInteger('user_id');
+			$table->bigInteger('user_id')->unique();
 			if (Schema::hasTable('users')) {
                 // Foreign Key
 				$table->foreign('user_id')->references('id')->on('users')
@@ -69,12 +69,12 @@ class CreateProfilesTable extends Migration
 			/** 
 			 	
 				Log information
-                Model needs to be review to achieve this behaviuor
+                Model needs to be reviewed to achieve this behavior
 				
 			*/
 			if (Schema::hasTable('users')) {
-				$table->bigInteger('created_by');
-				$table->bigInteger('updated_by');
+				$table->bigInteger('owner_id');
+				$table->bigInteger('updated_id');
 			}
 
             // Status
@@ -94,19 +94,30 @@ class CreateProfilesTable extends Migration
      */
     public function down()
     {
-        /*
-            SqLite does NOT allow to remove the Foreign Keys
-        */
-        switch(config('database.default')) {
-            case 'sqlite' :
-                break;
-            default:
-                Schema::table('profiles', function( Blueprint $table){
-                    $table->dropForeign(['user_id']);
-                });        
-                break;
+        if (Schema::hasTable('profile_project')) {
+            /*
+                SqLite does NOT allow to remove the Foreign Keys
+            */
+            switch(config('database.default')) {
+                case 'sqlite' :
+                    break;
+                default:
+                    Schema::table('profile_project', function( Blueprint $table){
+                        $table->dropForeign(['profile_id']);
+                    });        
+                    break;
+            }
         }
 
-        Schema::dropIfExists('profiles');
+        /*
+            SqLite does NOT allow to remove the Foreign Keys.
+            If Projects are related to foreign Keys the DROP will Fail
+        */
+        try {        
+            Schema::dropIfExists('profiles');
+        } catch (Illuminate\Database\QueryException $ex) {
+            echo $ex->getMessage() . "\n";
+        }
+
     }
 }

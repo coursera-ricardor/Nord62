@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Access;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+// Example using Gate
+use Illuminate\Support\Facades\Gate;
+
 use App\User;
 use App\Profile;
 
@@ -41,8 +44,11 @@ class userController extends Controller
         */
         // $this->middleware('auth',['except' => ['index','show']]);
 
-        // Access to the Users table is restricted
-        $this->middleware('auth');
+        // Access to the Users table is restricted,
+        // the user needs to login first
+        // $this->middleware('auth');
+
+        // Specific permissions required to access the options of the Controller
 
     }
 
@@ -54,12 +60,72 @@ class userController extends Controller
      */
     public function index()
     {
+
+        /*
+            Policies Authorization
+        */
+
+        /*
+            Spatie/permissions
+            @todo: Main table associated to roles and permissions is "Profile", the @can() directive needs to be updated.
+
+        */
+        // dd(auth()->user()->name);
+        // dd(auth()->user()->getAllPermissions()); // returns empty
+        // dd(auth()->user()->profile->getAllPermissions()); // returns collection with permissions
+
+        /*
+            If there is not user logged in an Exception is created.
+            - Authentication should be validated first, via Route middleware or at __Construct section.
+            - The profile is created only via:
+                User / Edit
+                User Validation and Authorization.
+            - After the authentication control is implemented, it should work without the if-then-else:
+                $profilePermissions = auth()->user()->profile->getAllPermissions()->pluck('name');        
+
+        */
+        // if ( ! is_null(auth()->user())) {
+        if ( auth()->check() && ( ! is_null(auth()->user()->profile )) ) {
+            try {
+                $profilePermissions = auth()->user()->profile->getAllPermissions()->pluck('name');        
+            } catch ( Exception $ex) {
+                echo $ex->getMessage();
+            }        
+        } else {
+            $profilePermissions = collect([]);
+        }
+
+
         // Master Model - Main Table
         $master_model = 'users';
 
         // $roles = Role::orderby('id', 'desc')->get();
+
+        /*
+            Record Access Control
+                - Read [ All | Owner | Group | Other]
+
+            [A]-ll records can be viewed
+        */
         $users = User::orderby('id', 'desc')->get();
-        return view('access.users.index',compact('users','master_model'));
+        /*
+            [O]-wner Only records owner_id can be viewed.
+            To implement this control, Auth implementation is required first, to identify the User credentials.
+            The rights assignation control required an additional implementation.
+
+                auth()->id()        // returns the id of the logged user
+                auth()->user()      // returns the logged user
+                auth()->check()     // checks if someone is logged in
+                auth()->guest()     // checks if guest
+
+            @todo: Spatie\Permissions does not have owner_id in the record implemented.
+                add the field and the index in the migration: $table->foreign('owner_id')->references('id')->on('users');
+
+        */
+        // $users = User::where('id',auth()->id())->orderby('id', 'desc')->get();
+
+
+        return view('access.users.index',compact('users','master_model','profilePermissions'));
     }
 
     /**
@@ -81,6 +147,10 @@ class userController extends Controller
     public function store(Request $request)
     {
         //
+        // User::create($request + ['owner_id' => auth()->id()]);
+        //
+        // Adding to the request
+        // $request['owner_id'] = auth()->id();
     }
 
     /**
@@ -89,9 +159,104 @@ class userController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $user)
     {
+        /*
+            Condition is failing due the relationship returns STRING instead of INTEGER
+                if ($user->profile->owner_id !== auth()->id() )
+
+            Options to solve the problem,
+                - Cast the returned value when required
+                - Cast the auth()->id() as STRING or $user->profile->owner_id as INTEGER
+                - Modify the Model using $casts[] array and cast the field to INTEGER
+        */
+        // dd($theProfile->id); // returns integer
+        // dd($user->profile->owner_id); // returns string
+        // $theProfile = $user->profile;
+
+        // dd($user->id); // automatic conversion 
+        // dd(auth()->id()); // automatic conversion
+
+        /*
+        *  Authorization
+        */
+        // dd($user->id);
+        // dd($user->profile->user_id);
+        // dd($user->profile->owner_id);
+        /*
+         * Using Policies\ProfilePolicy.php
+         *  These calls are not standard, In this case calling an authorization using other Model class.
+         * 
+        */
+        // $this->authorize('viewAny',Profile::class); // Call to the ProfilePolicy.php even if it is not registered in Providers\AuthServiceProvider.php
+        // $this->authorize('view',[Profile::class,$user->profile]); // Call to the ProfilePolicy.php even if it is not registered in Providers\AuthServiceProvider.php
+
+        /*
+         * Gate Test
+         * Note: Any Authorizable model can be used in the Gate call
+        */
+/*
         //
+        // Test sending the User RECORD as the main object
+        //
+        // if( Gate::forUser(auth()->user())->allows('test-gate', $user->id)) {
+        if( Gate::forUser($user->profile)->allows('test-gate', $user->id)) {
+            if( Gate::forUser($user->profile)->allows('test-gate', $user->profile->id)) {
+                dd('ok');
+            } else {
+                dd('fail');
+            }        
+        } else {
+           abort(403,'fail - not logged in OR No Profile defined');
+        }
+
+        //
+        // Test sending the Auth user as the main object
+        //
+        if( auth()->check() && (! is_Null(auth()->user()->profile) )) {
+            if( Gate::forUser(auth()->user()->profile)->allows('test-gate', $user->profile->id)) {
+                dd('ok');
+            } else {
+                dd('fail');
+            }        
+        } else {
+           abort(403,'fail - not logged in OR No Profile defined');
+        }
+
+*/
+        /*
+         * Using Policies\UserPolicy.php
+         *  Basic Validation: if ($user->profile->owner_id !== auth()->id() )
+         * 
+        */
+        // dd($user->can('browse')); // Returns false
+        // dd($user->profile->can('browse')); // Returns true
+
+        // $this->authorize('view',$user); // Uses UserPolicy
+        $this->authorize('view',$user->profile); // Uses ProfilePolicy
+
+        /*
+          Same validation in the controller.
+          - Profile record existance validation required
+        */
+        if (is_null($user->profile)){
+            if ( auth()->id() !== $user->id ) {
+                abort(403,__('Record not owned'));
+            }        
+        } else {
+            if ($user->profile->owner_id !== strval(auth()->id()) ) {
+                abort(403,__('Record not owned'));
+            }        
+        }
+        // laravel helper
+        // abort_if($user->profile->owner_id !== auth()->id(), 403);
+        // Via Policy control, creating the logic in the Policies/UserPolicy.php with the command:
+        //  php artisan make:policy ProfilePolicy –model=Profile
+        // It requires to update the Providers/AuthServiceProvider.php
+        // $this->authorize('view',$user->profile);
+        // dd($user->profile);
+
+        dd('return the User View');
     }
 
     /**
@@ -156,7 +321,7 @@ class userController extends Controller
 			]);
         
         $user->update($request->all());
-        $this->profileUpdate($user,['created_by' => $user->profile->created_by]);
+        $this->profileUpdate($user,['owner_id' => $user->profile->owner_id]);
 
         return back()->with('success', 'User Updated');
     }
@@ -235,7 +400,7 @@ class userController extends Controller
         //
         $profileInfo = $user->profile;
         // dd($profileInfo);
-        // dd($request->input('permissionsAssigned'));
+        // dd($request->input('permissionsAssigned')); // list of the permissions to be assigned
 
         // $profileInfo->roles()->sync($request->input('rolesAssigned'));
         $this->syncPermissions($profileInfo, $request->input('permissionsAssigned'));
@@ -269,12 +434,12 @@ class userController extends Controller
         // Create
         $this->profileUpdate($user);
         // Update
-        $this->ProfileUpdate($user,['created_by' => $user->profile->created_by]);
+        $this->ProfileUpdate($user,['owner_id' => $user->profile->owner_id]);
 
      */
      private function profileUpdate(User $mainUser, $updProfile = [] ) {
-        // dd(array_key_exists('created_by',$updProfile));
-        // dd($updProfile['created_by']);
+        // dd(array_key_exists('owner_id',$updProfile));
+        // dd($updProfile['owner_id']);
         // dd($updProfile);
         try {
            // dd($mainUser->toArray());
@@ -285,9 +450,9 @@ class userController extends Controller
                     'email' => $mainUser->email,
                     'status' => $mainUser->status,
                     // User needs to be authenticated first, if not an error will occur
-                    'updated_by' => auth()->user()->id,
+                    'updated_id' => auth()->user()->id,
                     // Update - Do not change if the record has a value indicated in the array $updProfile
-                    'created_by' => (( empty($updProfile) || (! array_key_exists('created_by',$updProfile)) ) ? auth()->user()->id : $updProfile['created_by']),
+                    'owner_id' => (( empty($updProfile) || (! array_key_exists('owner_id',$updProfile)) ) ? auth()->user()->id : $updProfile['owner_id']),
                 ]
            );
 
@@ -300,7 +465,7 @@ class userController extends Controller
      }
 
     /**
-     * Sync up the list of permissions assigned to the Role
+     * Sync up the list of roles assigned to the Profile
      *
      * @param  Profile  $profile
      * @param  array  $rolesToUpdate
@@ -311,7 +476,7 @@ class userController extends Controller
     }
 
     /**
-     * Sync up the list of permissions assigned to the Role
+     * Sync up the list of permissions assigned to the Profile
      *
      * @param  Profile  $profile
      * @param  array  $rolesToUpdate

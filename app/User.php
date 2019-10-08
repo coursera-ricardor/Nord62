@@ -6,9 +6,19 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+// Access Control List
+use Spatie\Permission\Traits\HasRoles;
+
+
 class User extends Authenticatable
 {
     use Notifiable;
+
+    /**
+     * @todo: Add the Spatie\Permission\Traits\HasRoles trait
+     *
+    */
+    use HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -18,6 +28,7 @@ class User extends Authenticatable
     protected $fillable = [
         'username', // @todo: enable the field to be updated
         'name', 'email', 'password',
+        'status', // A-ctive P-rotected  B-locked R-estricted C-onfirmation Required
     ];
 
     /**

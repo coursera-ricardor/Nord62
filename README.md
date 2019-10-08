@@ -42,6 +42,46 @@ public function edit($id)
     }
 ```
 
+### Record access control
+
+Add the fields to control the access by record to all the tables, additional indexes are needed.
+
+| field | description
+| ---: | ---:
+| owner_id | User id who created the record
+
+```
+    // Filtered by owner_id
+    $users = User::where('owner_id',auth()->id())->orderby('id', 'desc')->get();
+
+```
+
+#### Validate modifications in:
+
+- [ ] Migration
+- [ ] Seeders
+- [ ] Model
+
+#### Implementation
+
+    All new tables should have the suggested fields:
+
+| field | description
+| ---: | ---:
+| owner_id | User id who created the record
+| updated_id | User id who created the record
+
+
+#### Options
+
+More complex record access control could be implemented, by group_id (many groups), role_id (many roles), user_id (many_users)
+and with Unix file permissions structure:  Owner | Group| Other with permissions: Read-Write-Execute => Create-Edit-Delete-View
+or even ownership transfer.
+
+
+
+### Tasks
+
 - [X] Basic Laravel Auth
 - [X] Spatie/Permissions
 - [X] Users / Profile Link
