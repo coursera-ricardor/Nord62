@@ -36,8 +36,8 @@ class ProfilesTableSeeder extends Seeder
                     'name' => $user->name,
                     'email' => $user->email,
                     'status' => $user->status,
-                    'owner_id' => 1,
-                    'updated_id' => 1,
+                    'created_by' => 1,
+                    'updated_by' => 1,
                     'roles' => $Roles,
                 ];
         } // end foreach

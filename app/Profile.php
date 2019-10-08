@@ -39,7 +39,7 @@ class Profile extends Authenticatable
         'language_id','language_code','language',
         'country_id','country_code','country','state_id','state_code','state','zip_code',
         'street','street_number','city',
-        'latitude','longitude','owner_id','updated_id','status',
+        'latitude','longitude','created_by','updated_by','status',
     ];
 
     /**
@@ -56,7 +56,7 @@ class Profile extends Authenticatable
      * @var array
      */
     protected $casts = [
-        // 'owner_id' => 'integer',
+        // 'created_by' => 'integer',
     ];
 
     /* -----------------------------------------------------
@@ -77,7 +77,7 @@ class Profile extends Authenticatable
     */
     public function projects() {
         return $this->belongsToMany('App\Project','profile_project','profile_id','project_id')
-            ->withPivot('owner_id','updated_id','status')
+            ->withPivot('created_by','updated_by','status')
             ->withTimestamps();
     }
 

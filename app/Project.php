@@ -20,7 +20,7 @@ class Project extends Model
     */
     public function profiles() {
         return $this->belongsToMany('App\Profile','profile_project','project_id','profile_id')
-            ->withPivot('owner_id','updated_id','status')
+            ->withPivot('created_by','updated_by','status')
             ->withTimestamps();
     }
 

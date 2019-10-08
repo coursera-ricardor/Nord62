@@ -197,7 +197,7 @@
 
             <!-- panel-footer -->
             <div class="panel-footer">
-                <p>{{__('Created by')}}: {{ $user->find($profileInfo->owner_id)->name }} / {{__('Updated by')}}: {{ $user->find($profileInfo->updated_id)->name }}</p>
+                <p>{{__('Created by')}}: {{ $user->find($profileInfo->created_by)->name }} / {{__('Updated by')}}: {{ $user->find($profileInfo->updated_by)->name }}</p>
 			</div>
             <!-- .panel-footer -->
 

@@ -150,11 +150,11 @@ class UsersTableSeeder extends Seeder
                 $newRecord = $dbModel::create($dbRecord);
 
                 /*
-                 * Adding the owner_id to the record.
+                 * Adding the created_by to the record.
                  *  Note: Activate only if the fields exist in the table
                 */
                 /*
-                $newRecord->owner_id = $newRecord->id;
+                $newRecord->created_by = $newRecord->id;
                 $newRecord->updated_by = $newRecord->id;
                 $newRecord->save();
                 */
