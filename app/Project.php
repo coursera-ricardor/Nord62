@@ -19,7 +19,9 @@ class Project extends Model
         Validate the 3rd and 4rd Paramenters They are switched in each linked Model
     */
     public function profiles() {
-        return $this->belongsToMany('App\Profile','profile_has_projects','project_id','profile_id');
+        return $this->belongsToMany('App\Profile','profile_project','project_id','profile_id')
+            ->withPivot('owner_id','updated_id','status')
+            ->withTimestamps();
     }
 
 }

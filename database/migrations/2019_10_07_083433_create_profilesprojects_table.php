@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProjectsProfilesTable extends Migration
+class CreateProfilesProjectsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateProjectsProfilesTable extends Migration
      */
     public function up()
     {
-        Schema::create('project_profiles', function (Blueprint $table) {
+        Schema::create('profile_project', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->bigInteger('project_id');
@@ -61,6 +61,6 @@ class CreateProjectsProfilesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('projectprofile');
+        Schema::dropIfExists('profile_project');
     }
 }

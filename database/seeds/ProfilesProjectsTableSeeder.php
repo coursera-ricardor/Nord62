@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class ProjectsProfilesTableSeeder extends Seeder
+class ProfilesProjectsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -82,7 +82,7 @@ class ProjectsProfilesTableSeeder extends Seeder
         //
         // ProjectsProfiles Creation
         //
-        $this->createRecordClass(App\ProjectProfile::class, $Records,['roles']);
+        $this->createRecordClass(App\ProfileProject::class, $Records,['roles']);
 
 
     } // end run function

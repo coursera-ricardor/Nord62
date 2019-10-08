@@ -76,7 +76,9 @@ class Profile extends Authenticatable
         Validate the 3rd and 4rd Paramenters They are switched in each linked Model
     */
     public function projects() {
-        return $this->belongsToMany('App\Project','profile_has_projects','profile_id','project_id');
+        return $this->belongsToMany('App\Project','profile_project','profile_id','project_id')
+            ->withPivot('owner_id','updated_id','status')
+            ->withTimestamps();
     }
 
 }

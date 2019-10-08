@@ -94,19 +94,30 @@ class CreateProfilesTable extends Migration
      */
     public function down()
     {
-        /*
-            SqLite does NOT allow to remove the Foreign Keys
-        */
-        switch(config('database.default')) {
-            case 'sqlite' :
-                break;
-            default:
-                Schema::table('profiles', function( Blueprint $table){
-                    $table->dropForeign(['user_id']);
-                });        
-                break;
+        if (Schema::hasTable('profile_project')) {
+            /*
+                SqLite does NOT allow to remove the Foreign Keys
+            */
+            switch(config('database.default')) {
+                case 'sqlite' :
+                    break;
+                default:
+                    Schema::table('profile_project', function( Blueprint $table){
+                        $table->dropForeign(['profile_id']);
+                    });        
+                    break;
+            }
         }
 
-        Schema::dropIfExists('profiles');
+        /*
+            SqLite does NOT allow to remove the Foreign Keys.
+            If Projects are related to foreign Keys the DROP will Fail
+        */
+        try {        
+            Schema::dropIfExists('profiles');
+        } catch (Illuminate\Database\QueryException $ex) {
+            echo $ex->getMessage() . "\n";
+        }
+
     }
 }

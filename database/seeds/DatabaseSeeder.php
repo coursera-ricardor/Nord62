@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ProjectsTableSeeder::class);
 
         // Many to Many relationships
-        $this->call(ProjectsProfilesTableSeeder::class);
+        $this->call(ProfilesProjectsTableSeeder::class);
 
     }
 }
