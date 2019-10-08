@@ -49,3 +49,9 @@ Route::match(['put','patch'],'/users/{user}/updateProfile','Access\userControlle
 Route::match(['put','patch'],'/users/{user}/updateRoles','Access\userController@updateRoles')->name('users.updateRoles');
 Route::match(['put','patch'],'/users/{user}/updatePermissions','Access\userController@updatePermissions')->name('users.updatePermissions');
 Route::resource('users','Access\userController');
+
+/*
+    Profiles - Projects
+*/
+Route::resource('profiles_projects','Op\profileProjectController');
+

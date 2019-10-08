@@ -6,7 +6,10 @@ use App\ProjectProfile;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class ProjectProfileController extends Controller
+use App\ProfileProject;
+
+
+class profileProjectController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +18,14 @@ class ProjectProfileController extends Controller
      */
     public function index()
     {
-        //
+        // Master Model - Main Table
+        $master_model = 'users';
+
+        // $profileprojects = Auth()->user()->????->get();
+        $profileprojects = ProfileProject::orderby('project_id')->get();
+        $profilePermissions = [];
+
+        return view('op.profileproject.index',compact('profileprojects','master_model','profilePermissions'));        
     }
 
     /**
