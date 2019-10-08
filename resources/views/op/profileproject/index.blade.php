@@ -69,12 +69,24 @@
                                     <th>{{ __('Roles') }}
                                         <span class="badge badge-info" >{{ count($profileproject->roles()->pluck('name')) }}</span>
                                     </th>
+                                    <th>{{ __('Permissions') }}                                      
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($profileproject->roles as $role)
                                     <tr>
-                                        <td><span class="lbel label-info">{{ $role->name }}</span></td>
+                                        <td><span class="label label-info">{{ $role->name }}</span></td>
+                                        <td>
+                                            <table>
+                                                @foreach($role->permissions as $permission)
+                                                <tr><td>
+                                                    <span class="label label-info">{{ $permission->name }}</span>
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            </table>
+                                        <td>
                                     </tr>
                                 @endforeach
                             </tbody>
