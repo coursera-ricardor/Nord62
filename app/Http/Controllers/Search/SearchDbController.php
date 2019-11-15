@@ -20,6 +20,22 @@ class SearchDbController extends Controller
     */
     /**
      * Display a listing of the resource.
+     * API Test
+     *  Using Resources - Countries -
+     *
+     * @return \Illuminate\Http\Response
+    */
+    public function countries_cs(Request $request)
+    {
+        // Master Model - Main Table
+        // @todo: Accept and change the Ajax api call
+        $master_model = 'countries';
+
+        return view('search.indexApiLookup_cs');
+    }
+
+    /**
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
     */

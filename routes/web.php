@@ -59,6 +59,8 @@ Route::resource('profiles_projects','Op\profileProjectController');
     Searchs
 */
 Route::get('search/users/cs', 'Search\SearchDbController@users_cs')->name('search.users_cs');
+// Search using Ajax and defined API call
+Route::get('search/countries/cs', 'Search\SearchDbController@countries_cs')->name('search.countries_cs');
 
 
 /*
