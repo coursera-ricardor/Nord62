@@ -24,7 +24,7 @@ class ProfilesProjectsTableSeeder extends Seeder
 			    'status' => 'A', // A-ctive P-rotected  B-locked R-estricted C-onfirmation Required
                 'created_by' => 1,
                 'updated_by' => 1,
-                // 'roles' => ['System Administrator'],
+                'roles' => ['Administrator'],
 
             ];
         $Records[] = 
@@ -34,7 +34,7 @@ class ProfilesProjectsTableSeeder extends Seeder
 			    'status' => 'A', // A-ctive P-rotected  B-locked R-estricted C-onfirmation Required
                 'created_by' => 1,
                 'updated_by' => 1,
-                // 'roles' => ['System Administrator', 'System User'],
+                'roles' => ['Administrator', 'User'],
             ];
         $Records[] = 
             [
@@ -43,7 +43,7 @@ class ProfilesProjectsTableSeeder extends Seeder
 			    'status' => 'A', // A-ctive P-rotected  B-locked R-estricted C-onfirmation Required
                 'created_by' => 1,
                 'updated_by' => 1,
-                // 'roles' => ['System Administrator', 'System User','System Tester User'],
+                'roles' => ['Administrator', 'User Administrator','User'],
             ];
         $Records[] = 
             [
@@ -142,8 +142,8 @@ class ProfilesProjectsTableSeeder extends Seeder
                                     //
                                     // Method defined in  Traits\HasPermissions.php in the case of Spatie/Permissions
                                     // $newRecord->givePermissionTo($dbDetail);
+                                    $newRecord->assignRole($dbDetail);
                                     //
-                                    // $newPivotRecord->givePermissionTo('browse');
                                 } catch ( Exception $ex) {
                                     echo $ex->getMessage() . "\n";
                                 }
