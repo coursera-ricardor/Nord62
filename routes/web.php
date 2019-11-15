@@ -58,6 +58,13 @@ Route::resource('profiles_projects','Op\profileProjectController');
 /*
     Searchs
 */
+Route::get('search/users/cs', 'Search\SearchDbController@users_cs')->name('search.users_cs');
+
+
+/*
+ * Experimental and Prototypes
+ *
+*/
 Route::get('search/servicecity', 'Search\SearchCatalogController@index')->name('search.form');
 Route::match(['get','post'],'search/{model}/lookup/{field}/{response?}', 'Search\SearchCatalogController@Lookup')->name('search.lookup');
 // Route::match(['get','post'],'search/{model}/lookup', 'Search\SearchCatalogController@Lookup')->name('search.lookup');
