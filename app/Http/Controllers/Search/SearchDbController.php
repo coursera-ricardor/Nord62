@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\DB;
+use Auth;
 
 class SearchDbController extends Controller
 {
@@ -31,7 +32,11 @@ class SearchDbController extends Controller
         // @todo: Accept and change the Ajax api call
         $master_model = 'countries';
 
-        return view('search.indexApiLookup_cs');
+        $api_token = '';
+        if ( Auth::check() ){
+            $api_token = Auth::user()->api_token;
+        }
+        return view('search.indexApiLookup_cs',compact('api_token'));
     }
 
     /**

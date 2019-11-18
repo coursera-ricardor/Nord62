@@ -47,8 +47,9 @@
         $.ajax({
                 url: "{{ route('api.search.countries.index') }}",
                 headers: {
-                    'CSRFToken' : '{{ csrf_token() }}'
+                    'CSRFToken' : '{{ csrf_token() }}',
                 },
+                data: { api_token: '{{ $api_token }}' },
                 success: function (response) {
                     var tableHeaders = '';
                     $.each(response.data[0], function (field_id, val) {

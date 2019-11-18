@@ -24,8 +24,20 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     //'countries' => 'API\Catalogs\CountryController',
 // ]);
 
+/*
 Route::namespace('API')
     ->name('api.search.')
-    ->group( function() {
+    ->group(function() {
+        Route::Resource('countries','Catalogs\CountryController');
+    });
+Route::namespace('API')
+    ->name('api.search.')
+    ->group(['middleware' => 'auth:api'], function() {
+        Route::Resource('countries','Catalogs\CountryController');
+    });
+*/
+Route::middleware('auth:api')->namespace('API')
+    ->name('api.search.')
+    ->group(function() {
         Route::Resource('countries','Catalogs\CountryController');
     });

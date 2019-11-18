@@ -29,6 +29,7 @@ class User extends Authenticatable
         'username', // @todo: enable the field to be updated
         'name', 'email', 'password',
         'status', // A-ctive P-rotected  B-locked R-estricted C-onfirmation Required
+        'api_token', // API Token
     ];
 
     /**

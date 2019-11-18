@@ -11,6 +11,16 @@ use App\Http\Resources\Country as CountryResource;
 
 class CountryController extends Controller
 {
+
+    /**
+     * Authentication Gard
+     *  If not defined in the Route::
+     */
+    // public function __construct()
+    // {
+    //    $this->middleware('auth:api');
+    // }
+
     /**
      * Display a listing of the resource.
      *
@@ -45,7 +55,7 @@ class CountryController extends Controller
     {
         $country = Country::findOrFail($id);
 
-        return new CountryResource($country);
+        return response()->json(new CountryResource($country));
     }
 
     /**
