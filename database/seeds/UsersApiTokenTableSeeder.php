@@ -2,14 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-/**
-    This Seeder is validated in case multiple times is called. It validates the record and catch the exceptions.
-    Note:
-        Exceptions are no validated.
-
-    Model 3 will be used as selected option for the next seeders.
-*/
-
+use App\User;
 
 class UsersApiTokenTableSeeder extends Seeder
 {
@@ -21,7 +14,14 @@ class UsersApiTokenTableSeeder extends Seeder
      */
     public function run()
     {
-        $updateApiUsers = DB::table('users')->whereNull('api_token')->update(array('api_token' => Str::random(60)));
+        // This query will update ALL the users with the same Token
+        // $updateApiUsers = DB::table('users')->whereNull('api_token')->update(array('api_token' => Str::random(60)));
+        $updateApiUsers = User::whereNull('api_token')->get();
+
+        foreach($updateApiUsers as $updateApiUser) {
+            $updateApiUser->api_token = Str::random(60);
+            $updateApiUser->save();
+        }
     }
 
 }

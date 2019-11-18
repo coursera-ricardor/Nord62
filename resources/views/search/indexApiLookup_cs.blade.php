@@ -82,7 +82,7 @@
                     $('#dyn_v2_display').dataTable({data: response.data, columns: columns});
 
                 },
-                function(jqXHR, textStatus, errorThrown) {
+                error: function(jqXHR, textStatus, errorThrown) {
                     alert('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!');
 
                     $('#result').html('<p>status code: '+jqXHR.status+'</p><p>errorThrown: ' + errorThrown + '</p><p>jqXHR.responseText:</p><div>'+jqXHR.responseText + '</div>');

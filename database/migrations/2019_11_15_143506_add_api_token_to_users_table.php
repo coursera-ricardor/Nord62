@@ -20,7 +20,9 @@ class AddApiTokenToUsersTable extends Migration
                     ->default(null);
                     });
 
-        $updateApiUsers = DB::table('users')->whereNull('api_token')->update(array('api_token' => Str::random(60)));
+        // $updateApiUsers = DB::table('users')->whereNull('api_token')->update(array('api_token' => Str::random(60)));
+        // Run Seeder instead
+        //  php artisan db:seed --class=UsersApiTokenTableSeeder
 
     }
 
