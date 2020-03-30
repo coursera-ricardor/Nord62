@@ -13,19 +13,16 @@ use Spatie\Permission\Traits\HasRoles;
 
 
 // class Profile extends Model
-class Profile extends Authenticatable
-
+// class Profile extends Authenticatable
+class Profile extends Model implements AuthorizableContract, AuthenticatableContract
 {
-
-    // use Notifiable;
+    use HasRoles, Authorizable, Authenticatable;
 
     /**
      * @todo: Add the Spatie\Permission\Traits\HasRoles trait
      *
     */
-    use HasRoles;
     protected $guard_name = 'web';
-
 
     /**
      * The attributes that are mass assignable.

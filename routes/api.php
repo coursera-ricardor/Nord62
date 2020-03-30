@@ -16,3 +16,28 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// List all countries
+// Route::get('countries', 'Catalogs/CountryController@index')->name('search.api.countries');
+
+// Route::apiResources([
+    //'countries' => 'API\Catalogs\CountryController',
+// ]);
+
+/*
+Route::namespace('API')
+    ->name('api.search.')
+    ->group(function() {
+        Route::Resource('countries','Catalogs\CountryController');
+    });
+Route::namespace('API')
+    ->name('api.search.')
+    ->group(['middleware' => 'auth:api'], function() {
+        Route::Resource('countries','Catalogs\CountryController');
+    });
+*/
+Route::middleware('auth:api')->namespace('API')
+    ->name('api.search.')
+    ->group(function() {
+        Route::Resource('countries','Catalogs\CountryController');
+    });

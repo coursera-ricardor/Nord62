@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -73,6 +74,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             // 'status' => 'C' , // A-ctive P-rotected  B-locked R-estricted C-onfirmation Required DEFAULT controlled by the Database
+            'api_token' => Str::random(60), // Added in a secondary migration
         ]);
     }
 }

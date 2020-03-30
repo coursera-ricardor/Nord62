@@ -161,7 +161,7 @@
         $.ajax({
                 url: "{{ route('search.lookup_cs') }}",
                 headers: {
-                    'CSRFToken' : '{{ csrf_token() }}'
+                    'CSRFToken' : '{{ csrf_token() }}',
                 },
                 success: function (response) {
                     var tableHeaders = '';

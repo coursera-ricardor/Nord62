@@ -29,6 +29,7 @@ class User extends Authenticatable
         'username', // @todo: enable the field to be updated
         'name', 'email', 'password',
         'status', // A-ctive P-rotected  B-locked R-estricted C-onfirmation Required
+        'api_token', // API Token
     ];
 
     /**
@@ -54,9 +55,14 @@ class User extends Authenticatable
     * Profile Relationship
     */
     public function profile(){
-        return $this->hasOne('App\Profile');
+        // return $this->hasOne('App\Profile');
+        return $this->belongsTo(Profile::class);
     }
-
-
+    
+    // overwrite can 
+    public function can($abilities, $arguments = [])
+    {
+           return app(Gate::class)->forUser($this->profile)->check($abilities, $arguments);
+    }
 
 }

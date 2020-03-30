@@ -59,7 +59,19 @@ Route::resource('profiles_projects','Op\profileProjectController');
     Searchs
 */
 Route::get('search/users/cs', 'Search\SearchDbController@users_cs')->name('search.users_cs');
+// Search using Ajax and defined API call
+Route::get('search/countries/cs', 'Search\SearchDbController@countries_cs')->name('search.countries_cs');
 
+/*
+ * Test Duplicating the API Controller Calls
+ *  Same Routes are created in routes/api.php with different
+ *  prefix and auth method
+ *
+*/
+Route::namespace('API')
+    ->group(function() {
+        Route::Resource('countries','Catalogs\CountryController');
+    });
 
 /*
  * Experimental and Prototypes

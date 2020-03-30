@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\DB;
+use Auth;
 
 class SearchDbController extends Controller
 {
@@ -18,6 +19,26 @@ class SearchDbController extends Controller
     /*
      * Lookup Using Datatables with Client Side Interaction
     */
+    /**
+     * Display a listing of the resource.
+     * API Test
+     *  Using Resources - Countries -
+     *
+     * @return \Illuminate\Http\Response
+    */
+    public function countries_cs(Request $request)
+    {
+        // Master Model - Main Table
+        // @todo: Accept and change the Ajax api call
+        $master_model = 'countries';
+
+        $api_token = '';
+        if ( Auth::check() ){
+            $api_token = Auth::user()->api_token;
+        }
+        return view('search.indexApiLookup_cs',compact('api_token'));
+    }
+
     /**
      * Display a listing of the resource.
      *

@@ -1,12 +1,26 @@
 <?php
 
-namespace App\Http\Controllers\Catalogs;
+namespace App\Http\Controllers\API\Catalogs;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class countryController extends Controller
+use App\Country;
+// Prepares the Json Response
+use App\Http\Resources\Country as CountryResource;
+
+class CountryController extends Controller
 {
+
+    /**
+     * Authentication Gard
+     *  If not defined in the Route::
+     */
+    // public function __construct()
+    // {
+    //    $this->middleware('auth:api');
+    // }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,17 +28,10 @@ class countryController extends Controller
      */
     public function index()
     {
-        //
-    }
+        // $countries = Country::paginate(5);
+        $countries = Country::all();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return CountryResource::collection($countries);
     }
 
     /**
@@ -46,18 +53,9 @@ class countryController extends Controller
      */
     public function show($id)
     {
-        //
-    }
+        $country = Country::findOrFail($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return response()->json(new CountryResource($country));
     }
 
     /**
