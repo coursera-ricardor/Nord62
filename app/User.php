@@ -55,9 +55,14 @@ class User extends Authenticatable
     * Profile Relationship
     */
     public function profile(){
-        return $this->hasOne('App\Profile');
+        // return $this->hasOne('App\Profile');
+        return $this->belongsTo(Profile::class);
     }
-
-
+    
+    // overwrite can 
+    public function can($abilities, $arguments = [])
+    {
+           return app(Gate::class)->forUser($this->profile)->check($abilities, $arguments);
+    }
 
 }
